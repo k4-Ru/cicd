@@ -7,7 +7,7 @@ describe('POST /api/login', () => {
         const response = await request(app)
         .post('/api/login')
         .send({
-            username: 'Carl Nicolas',
+            username: 'Carl Nicolas!',
             password: 'password123'
         });
         expect(response.statusCode).toBe(200);
