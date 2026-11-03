@@ -23,10 +23,12 @@ app.get('/', (req, res) => {
 app.post('/api/login', (req, res) => {
     const { username, password } = req.body;
 
-    if (username === demoUser.username && password === demoUser.password) {
-        res.status(200).json({ message: 'Login successful' , username: demoUser.username});
-    } else if (!username || !password) {
+    if (!username || !password) {
         return res.status(400).json('Missing fields');
+    }
+
+    if (username === demoUser.username && password === demoUser.password) {
+        return res.status(200).json({ message: 'Login successful' , username: demoUser.username});
     }
 
     return res.status(401).json('Invalid credentials');
