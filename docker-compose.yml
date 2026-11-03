@@ -1,0 +1,16 @@
+services:
+  staging:
+    build: . 
+    environment:
+     - PORT=3000
+    ports:
+    - "8081:3000"
+
+  production:
+    build: . 
+    environment:
+     - PORT=3000
+    ports:
+    - "8080:3000"
+
+  

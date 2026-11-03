@@ -1,0 +1,59 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'target environment (staging or production)'
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+      commit_sha:
+        description: 'commit SHA to rollback into'
+        required: true
+        type: string
+
+jobs: 
+    ci:
+        name: Test and Build
+        if: github.event_name != 'workflow_dispatch'
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                node-version: 22
+                cache: npm
+            - run: npm ci
+            - run: npm run lint
+            - run: npm test
+            - run: npm run build
+
+    cd:
+        name: Docker Build
+        needs: ci
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - run: docker build -t express-login-cicd:${{ github.sha }} .
+
+    rollback:
+        name: Rollback
+        if: github.event_name == 'workflow_dispatch'
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                fetch-depth: 0
+            - run: git checkout ${{ github.event.inputs.commit_sha }}
+            - run: docker build -t express-login-cicd:${{ github.event.inputs.commit_sha }} .
+            - run: echo "Rollback to commit ${{ github.event.inputs.commit_sha }} successful!"
+ 

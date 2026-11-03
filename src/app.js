@@ -25,9 +25,11 @@ app.post('/api/login', (req, res) => {
 
     if (username === demoUser.username && password === demoUser.password) {
         res.status(200).json({ message: 'Login successful' , username: demoUser.username});
+    } else if (!username || !password) {
+        return res.status(400).json('Missing fields');
     }
 
-    return res.status(401).json({ message: 'Invalid username or password' });
+    return res.status(401).json('Invalid credentials');
 });
 
 module.exports = app;
