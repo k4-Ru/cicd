@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "node scripts/build.js",
     "lint": "eslint",
     "test": "jest --runInBand"
   },
@@ -13,7 +14,7 @@
   "type": "commonjs",
 
 
-  
+
   "dependencies": {
     "express": "^5.3.0"
   },
