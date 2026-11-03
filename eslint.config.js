@@ -8,7 +8,9 @@ module.exports = [
             sourceType: 'commonjs',
             globals: {
                 ...globals.node,
+                ...globals.jest,
             },
+
         },
         rules: {
             'no-unused-vars': 'warn',
